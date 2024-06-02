@@ -2,7 +2,7 @@
 
 ![vsd_iat](images/vsd_iat.png)
 
-## **Day 1**
+**Day 1**
 -Introduction to IC Design components and terminologies:
 - Core- A core is an area in the chip where the fundamental logic of the design is placed. It encapsulates all the combinational circuit, soft and hard IPs, and nets.
 - Die- Die is an area of chip that encapsulates the core and IO pads. Die is imprinted multiple times along the silicon area or wafer to increase the throughput.
@@ -57,7 +57,7 @@ OpenSTA- Performs static timing analysis on the resulting netlist to generate ti
 
 ![syn_design_D1](images/syn_design_D1.png)
 
-### **Day 2**
+**Day 2**
 -Chip Floorplanning:
 In floorplanning phase deals with setting die area, core area, core utilization factor, aspect ratio, placing of macros, power distribution networks and placement of IO pins.
 * Aspect Ratio- Specifies the shape of the chip, given by ratio of height to width of the core area. Aspect ratio of 1 indicates square shape else rectangle.
@@ -108,4 +108,4 @@ The standard cell characterization flow involves:
 * Provide necessary simulation commands
 Apply the entire flow to GUNA tool to generate timing, noise and power models.
 
-#### **Day 3**
+**Day 3**
