@@ -285,4 +285,4 @@ For the design to be complete, the worst negative slack needs to be above or equ
 
 ![slackV_D4](images/slackV_D4.png)
 
-![slackMET_D4](images/slackM_D4.png)
+![slackMET_D4](images/slackMET_D4.png)
