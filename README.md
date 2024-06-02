@@ -7,5 +7,5 @@ This repository aims to capture the works done in 5-day workshop of Adavance Phy
 ## **Day 1**
 -Introduction to IC Design components and terminologies:
 
-![ic_components_D1](images/ic_components_D1)
+![ABC123](images/ic_components_D1)
     
