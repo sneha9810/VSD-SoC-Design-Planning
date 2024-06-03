@@ -203,6 +203,7 @@ The entire layout information of the block (macro or standard cell) is not requi
 * Technology LEF- Holds information about the metal layers, via, DRC technology used by placer and router.
 
 Below image gives idea regarding difference between Layout and LEF:
+
 ![D4](images/D4.png)
 
 Tracks are used in routing stages. Routes are metal traces which can go over the tracks. The information of horizontal and vertical tracks present in each layer is given in `tracks.info` file.
@@ -286,5 +287,149 @@ For the design to be complete, the worst negative slack needs to be above or equ
 ![slackV_D4](images/slackV_D4.png)
 
 ![slackMET_D4](images/slackMET_D4.png)
+
+-Clock Tree Synthesis (CTS):
+
+The main concern in generation of clock tree is the clock skew, difference in arrival times of the clock for sequential elements across the design. To ensure timing constraints CTS will add buffers throughout the clock tree which will modify our netlist. This will generate new `def` file.
+
+* TritonCTS- Synthesizes the clock distribution network (the clock tree)
+* To run clock tree synthesis:
+
+`%run_cts`
+
+![cts1_D4](images/cts1_D4.png)
+
+![cts2_D4](images/cts2_D4.png)
+
+![cts3_D4](images/cts3_D4.png)
+
+Further analysis of CTS in done in openROAD which is integrated in openLANE flow using openSTA tool:
+
+`%openroad`
+
+![or1_D4](images/or1_D4.png)
+
+In openROAD the timing analysis is done by creating a `db` file from `lef` and `def` files. The `lef` file won’t change, as it is a technology file but the `def` file changes when a new `db` is added.
+
+```
+% read_lef /openLANE_flow/designs/picorv32a/runs/24-03_10-03/tmp/merged.lef
+% read_def /openLANE_flow/designs/picorv32a/runs/24-03_10-03/results/cts/picorv32a.cts.def
+% write_db picorv32a_cts.db
+```
+
+![or2_D4](images/or2_D4.png)
+
+This creates `db` file in `$openLANE_flow` directory.
+```````
+% read_db picorv32a_cts.db
+% read_verilog /openLANE_flow/designs/picorv32a/runs/24-03_10-03/results/synthesis/picorv32a.synthesis_cts.v
+% read_liberty -max $::env(LIB_SLOWEST)
+% read_liberty -min $::env(LIB_FASTEST)
+% read_sdc /openLANE_flow/designs/picorv32a/src/mybase.sdc
+% set_propagated_clock [all_clocks]
+% report_checks -path_delay min_max -format full_clock_expanded -digits 4
+```````
+
+We have done pre-CTS timing analysis to get setup and hold slack and post-CTS timing analysis to get setup and hold slack. For typical corners ( `LIB_SYNTH_COMPLETE` env variable which points to typical library) setup and hold slack are met.
+
+`Hold Slack` = 0.0772
+
+`Setup Slack` = 14.1462
+
+``
+% echo $::env(CTS_CLK_BUFFER_LIST)
+sky130_fd_sc_hd__clkbuf_1 sky130_fd_sc_hd__clkbuf_2 sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8
+``
+
+Try removing `sky130_fd_sc_hd__clkbuf_1` from clock tree and do post cts timing analysis.
+
+````
+% set ::env(CTS_CLK_BUFFER_LIST) [lreplace $::env(CTS_CLK_BUFFER_LIST) 0 0]
+sky130_fd_sc_hd__clkbuf_2 sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8
+% echo $::env(CTS_CLK_BUFFER_LIST)
+sky130_fd_sc_hd__clkbuf_2 sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8
+````
+
+```
+% echo $::env(CURRENT_DEF)
+/openLANE_flow/designs/picorv32a/runs/24-03_10-03/results/cts/picorv32a.cts.def
+% set ::env(CURRENT_DEF) /openLANE_flow/designs/picorv32a/runs/24-03_10-03/results/placement/picorv32a.placement.def
+```
+
+Now run openROAD and do a timing analysis as mentioned above.
+
+`Hold Slack` = 0.2456
+
+`Setup Slack` = 14.1462
+
+Including large size clock buffers in clock path improves slack but area increases.
+
+To check the clock skew:
+
+![clkskew_D4](images/clkskew_D4.png)
+
+**Day-5**
+
+-Power Distribution Network (PDN):
+
+Power planning is a step which is typically done with floorplanning in which power grid network is created to distribute power to each part of the design equally. In openLANE flow it is done before routing.
+
+Three levels of power distribution:
+* Rings- Carries VDD and VSS around the chip
+* Stripes- Carries VDD and VSS from Rings across the chip
+* Rails- Connect VDD and VSS to the standard cell VDD and VSS
+
+![D5](images/D5.png)
+
+To run pdn:
+
+`% gen_pdn`
+
+This generates new def file in `$openLANE_flow/designs/picorv32a/runs/24-03_10-03/tmp/floorplan/31-pdn.def`
+
+![pdn_D5](images/pdn_D5.png)
+
+-Routing:
+
+Routing is the stage where the interconnnections are made. This includes interconnections of standard cells, the macro pins, the pins of the block boundary or pads of the chip boundary. Logical connectivity is defined by netlist and design rules are defined in technology files, which are available as routing tool. In routing stage, metal and vias are used to create the electrical connections.
+
+* Global Routing- Coarse-grain assignment of routes to route regions. In global routing wire segments are tentatively assigned within the chip layout.
+* Detailed Routing- Fine-grain assignment of routes to route tracks. During detailed routing, the wire segments are assigned to specific routing tracks.
+
+`FastRoute`- Performs global routing to generate a guide file for the detailed router
+
+`TritonRoute`- Performs detailed routing
+
+To run routing:
+
+`%run_routing`
+
+![rout1_D5](images/rout1_D5.png)
+
+![rout2_D5](images/rout2_D5.png)
+
+![rout3_D5](images/rout3_D5.png)
+
+After routing magic tool can be used to get the routing view:
+
+![rout4_D5](images/rout4_D5.png)
+
+![rout5_D5](images/rout5_D5.png)
+
+After routing has been completed interconnect parasitics can be extracted to perform sign-off post-route STA analysis. The parasitics are extracted into a SPEF file using an inbuilt SPEF-Extractor present in the openlane.
+
+`spef` file will be generated after `%run_routing` command at location:
+`$home/vsduser/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/24-03_10-03/results/routing/picorv32a.spef` 
+Same location will hold both the `spef` and `def` files.
+
+-GDSII:
+
+GDSII files are usually the final output product of the IC design cycle and are given to the silicon foundries for IC fabrication. It is a binary file format representing planar geometric shapes, text labels and other informations about the layout in hierarchical form.
+
+To generate GDSII file:
+
+`% run_magic`
+
+![gds2_D5](images/gds2_D5.png)
 
 
