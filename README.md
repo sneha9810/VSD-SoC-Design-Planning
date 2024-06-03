@@ -2,7 +2,7 @@
 
 ![vsd_iat](images/vsd_iat.png)
 
-**Day 1**
+**Day-1**
 
 -Introduction to IC Design Components and Terminologies:
 
@@ -66,7 +66,7 @@ To synthesize the design:
 
 ![syn_design_D1](images/syn_design_D1.png)
 
-**Day 2**
+**Day-2**
 
 -Chip Floorplanning:
 
@@ -131,7 +131,7 @@ The standard cell characterization flow involves:
 * Provide necessary simulation commands
 Apply the entire flow to GUNA tool to generate timing, noise and power models.
 
-**Day 3**
+**Day-3**
 
 Build basic CMOS inverter netlist spice deck file using ngspice and perform dc and transient analysis. Understanding basic terminologies of CMOS inverter like static and dynamic characteristics.
 
@@ -187,7 +187,7 @@ To plot transient analysis output, where y - output node and a - input node:
 
 ![p9_D3](images/p9_D3.png)
 
-**Day 4**
+**Day-4**
 
 -Introduction and generation of LEF files using magic tool:
 
@@ -238,29 +238,30 @@ Custom cell inverter characterization information is included in above mentioned
 
 ![modified_config_D4](images/modified_config_D4.png)
 
-% package require openLANE 0.9
-
-% prep -design picorv32a -tag 24-03_10-03 -overwrite
-
-% set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
-
-% add_lefs -src $lefs
-
-% set ::env(SYNTH_STRATEGY) "DELAY 3"
-
-% set ::env(SYNTH_SIZING) 1
-
-% run_synthesis
-
-% init_floorplan
-
-% place_io
-
-% tap_decap_or
-
-% run_placement
-
 Perform openLANE design flow:
+
+`% package require openLANE 0.9`
+
+`% prep -design picorv32a -tag 24-03_10-03 -overwrite`
+
+`% set lefs [glob $::env(DESIGN_DIR)/src/*.lef]`
+
+`% add_lefs -src $lefs`
+
+`% set ::env(SYNTH_STRATEGY) "DELAY 3"`
+
+`% set ::env(SYNTH_SIZING) 1`
+
+`% run_synthesis`
+
+`% init_floorplan`
+
+`% place_io`
+
+`% tap_decap_or`
+
+`% run_placement`
+
 ![df1_D4](images/df1_D4.png)
 
 ![df2_D4](images/df2_D4.png)
