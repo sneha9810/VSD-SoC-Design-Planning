@@ -1,8 +1,8 @@
-# **Advance Physical Design using OpenLANE and SkyWater 130nm PDK**
+# **ADVANCED PHYSICAL DESIGN USING OpenLANE/Sky130**
 
-![vsd_iat](images/vsd_iat.png)
+![vsd](images/vsd.png)
 
-**Day-1**
+**DAY-1**
 
 -Introduction to IC Design Components and Terminologies:
 
@@ -26,8 +26,10 @@ OpenLANE is an automated RTL to GDSII flow. It is based on several open source c
 ![design_flow_D1](images/design_flow_D1.png)
 
 - OpenLANE runs as an container inside docker.
+
 For OpenLANE setup refer :
-https://github.com/The-OpenROAD-Project/OpenLane[`*OpenLANE*`]
+
+[OpenLANE] (https://github.com/The-OpenROAD-Project/OpenLane)
 
 -Open Source EDA Tools Familiarisation:
 
@@ -69,7 +71,7 @@ To synthesize the design:
 
 ![syn_design_D1](images/syn_design_D1.png)
 
-**Day-2**
+**DAY-2**
 
 -Chip Floorplanning:
 
@@ -137,7 +139,7 @@ The standard cell characterization flow involves:
 * Provide necessary simulation commands
 Apply the entire flow into GUNA tool to generate timing, noise and power models.
 
-**Day-3**
+**DAY-3**
 
 Building basic CMOS inverter netlist spice deck file using ngspice and perform DC and Transient analysis. Understanding the basic terminologies of CMOS inverter like static and dynamic characteristics.
 
@@ -193,7 +195,7 @@ To plot Transient analysis output, where y- output node and a- input node:
 
 ![p9_D3](images/p9_D3.png)
 
-**Day-4**
+**DAY-4**
 
 -Introduction and generation of LEF files using magic tool:
 
@@ -336,10 +338,13 @@ We have done pre-CTS timing analysis to get setup and hold slack and post-CTS ti
 
 `Setup Slack` = 14.1462
 
-``
+`
 % echo $::env(CTS_CLK_BUFFER_LIST)
+`
+
+`
 sky130_fd_sc_hd__clkbuf_1 sky130_fd_sc_hd__clkbuf_2 sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8
-``
+`
 
 Try removing `sky130_fd_sc_hd__clkbuf_1` from clock tree and do post cts timing analysis.
 
@@ -368,7 +373,7 @@ To check the clock skew:
 
 ![clkskew_D4](images/clkskew_D4.png)
 
-**Day-5**
+**DAY-5**
 
 -Power Distribution Network (PDN):
 
@@ -431,5 +436,9 @@ To generate GDSII file:
 `% run_magic`
 
 ![gds2_D5](images/gds2_D5.png)
+
+## **ACKNOWLEDGEMENT**
+
+An insightful workshop on System-on-Chip (SoC) design and planning. The hands-on sessions were extremely valuable, providing practical experience with industry-standard tools and workflows. This workshop has equipped me with the knowledge and skills to tackle SoC design challenges and has inspired me to further explore advanced topics in VLSI design. Overall, it was an excellent learning opportunity that will undoubtedly benefit my future projects and career in semiconductor design.
 
 
